@@ -1,0 +1,23 @@
+{
+	"pattern" : "daskeyboard"
+	, "layout" : {
+
+		"zero" : [ 4, 69 ]
+		, "plus1" : [ 7, 75 ]
+		, "plus2" : [ 22, 70 ]
+		, "plus3" : [ 74 ]
+		, "plus4" : [ 8 ]
+		, "plus5" : [ 26 ]
+		, "plus6" : [ 77 ]
+		, "plus7" : [ 76 ]
+		, "plus14" : [ 78 ]
+		, "minus1" : [ 9, 71 ]
+		, "minus2" : 72
+		, "minus3" : [ 21 ]
+		, "minus4" : [ 42 ]
+		, "minus5" : [ 73 ]
+		, "minus6" : [ 25 ]
+		, "minus7" : [ 6 ]
+		, "minus14" : [ 27 ]
+	}
+}

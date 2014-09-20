@@ -1,0 +1,31 @@
+{
+  "name": "cerulean",
+  "version": "0.0.1",
+  "description": "Node.js QWERTY instrument inspired by Samchillian",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified, please write some!\" && exit 1"
+  },
+  "author": "Emily Rose <emily@contactvibe.com>",
+  "license": "CC0",
+  "dependencies": {
+    "coremidi": "^0.1.1",
+    "hidstream": "0.0.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexxy/cerulean.git"
+  },
+  "keywords": [
+    "midi",
+    "keyboard",
+    "instrument",
+    "music",
+    "hid"
+  ],
+  "bugs": {
+    "url": "https://github.com/nexxy/cerulean/issues"
+  },
+  "homepage": "https://github.com/nexxy/cerulean"
+}
