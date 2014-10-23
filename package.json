@@ -9,6 +9,7 @@
   "author": "Emily Rose <emily@contactvibe.com>",
   "license": "CC0",
   "dependencies": {
+    "commander": "^2.3.0",
     "coremidi": "^0.1.1",
     "hidstream": "0.0.5"
   },

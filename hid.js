@@ -1,13 +1,21 @@
 var hid = require('hidstream')
 var core = require('coremidi')()
-var config = require('./config')
+var program = require('commander')
 var state = undefined // always with the state machines
 var received // event counter
 var device // HID device object
-var note = 60 // middle C
-var previous = [ ] // previous keys 
-var current  = [ ] // current keys
+var note
+var previous = [ ] // previous keys
 var layout = [ ] // key-interval value
+var scale // The scale intervals to play
+var currentRelativeNote = 0 // The current note relative to the scale interval, e.g. 0-7 except 12 tone which is 0-11
+
+const scales = {
+
+	major : [2, 2, 1, 2, 2, 2, 1],
+	minor : [2, 1, 2, 2, 1, 2, 2],
+	twelvetone: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+}
 
 const states = {
 
@@ -19,8 +27,14 @@ const states = {
 	, 'EXITING' : 5
 }
 
-process.on('SIGINT', exit)
+program
+	.version(require('./package').version)
+	.option('-k, --key [key]', 'The key to play in, e.g. "cmajor"', 'twelvetone')
+	.option('-c, --config [config]', 'The instrument config file to use', './config.json')
+	.parse(process.argv)
+var config = require(program.config)
 
+process.on('SIGINT', exit)
 
 /** *
  * Map keyboard layout to a 'lookup table'
@@ -42,6 +56,47 @@ Object.keys(config.layout).forEach(function mapKeys(k) {
 	}
 })
 
+/** *
+ * Parse the key signature
+ */
+function initScale() {
+
+	var key = program.key
+	if (key == 'twelvetone') {
+
+		scale = scales.twelvetone
+		note = 60 // middle C
+	} else {
+
+		var signature = /(^[abcdefg])(sharp|flat)?(major|minor)$/.exec(program.key)
+		if (!signature) {
+
+			console.error('Invalid key signature "' + key + '"')
+			process.exit(1)
+		}
+
+		scale = scales[signature[3]]
+
+		// Non-sharp/flat keys, starting at A, is the A-minor scale
+		note = 57
+		var keyOffset = signature[0].charCodeAt(0) - 'a'.charCodeAt(0)
+		for (var i = 0; i < keyOffset; i++) {
+
+			note += scales.minor[i]
+		}
+		if (note < 60) {
+
+			note += 12
+		}
+		if (signature[2] == 'sharp') {
+
+			note++
+		} else if (signature[2] == 'flat') {
+
+			note--
+		}
+	}
+}
 
 /** *
  * Convert text interval from config to integer
@@ -94,6 +149,29 @@ function create(path) {
 	initialize(device)
 }
 
+/** *
+ * Create stream device
+ */
+
+function createStream() {
+
+	process.stdin.setRawMode(true)
+	process.stdin.on('data', function(key) {
+
+		var char = key.toString()
+
+		// Check for ctrl-c
+		if (char.charCodeAt(0) == 3) {
+
+			process.exit(0)
+		}
+		data({
+
+			keyCodes: [ char ]
+		})
+	})
+}
+
 
 /** * 
  * Add listeners to the device
@@ -122,9 +200,35 @@ function data(dat) {
 
 	var key = dat.keyCodes[0]
 	
-	if(key != previous && key in layout) {
-		
-		note = note + layout[key]
+	if(key in layout) {
+
+		var change = 0
+		var layoutChange = layout[key]
+		var i
+		if (layoutChange < 0) {
+
+			for (i = 0; i > layoutChange; i--) {
+
+				currentRelativeNote--
+				if (currentRelativeNote < 0) {
+
+					currentRelativeNote += scale.length
+				}
+				change -= scale[currentRelativeNote]
+			}
+		} else if (layoutChange > 0) {
+
+			for (i = 0; i < layoutChange; i++) {
+
+				change += scale[currentRelativeNote]
+				currentRelativeNote++
+				if (currentRelativeNote >= scale.length) {
+
+					currentRelativeNote -= scale.length
+				}
+			}
+		}
+		note += change
 		core.write([144, note , 127])
 		console.log("> %s: %s", layout[key], note)
 		previous = key
@@ -182,4 +286,10 @@ function exit() {
 	state = states.EXITING
 }
 
-search() // begin here!
+// begin here!
+initScale()
+if (config.type == 'stream') {
+	createStream()
+} else {
+	search()
+}
