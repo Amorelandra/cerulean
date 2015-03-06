@@ -104,7 +104,7 @@ function initialize(dev) {
 	dev.on('data', data)
 
 	dev.on('error', reset)
-	setTimeout(check, 100)
+	setTimeout(check, 500)
 }
 
 
