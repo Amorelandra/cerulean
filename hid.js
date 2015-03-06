@@ -89,7 +89,7 @@ function search() {
 function create(path) {
 
 	state = states.CREATING
-	device = new hid.device(path)
+	device = new hid.device(path, { parser : hid.parser.keyboard })
 	received = 0
 	initialize(device)
 }
