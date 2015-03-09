@@ -1,7 +1,7 @@
 cerulean
 ========
 
-Node.js QWERTY instrument inspired by the Samchillian Tip Tip Tip Cheeepeeeee
+Node.js QWERTY instrument inspired by the [Samchillian Tip Tip Tip Cheeepeeeee](http://www.samchillian.com/aboutsam.html)
 
 ### Concept
 
