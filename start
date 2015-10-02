@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sudo node hid
+sudo node hid $1 $2 $3 $4

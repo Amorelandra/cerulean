@@ -1,0 +1,21 @@
+{
+	"type" : "stream"
+	, "layout" : {
+
+		"zero" : [ "a" ]
+		, "plus1" : [ "s" ]
+		, "plus2" : [ "d" ]
+		, "plus3" : [ "f" ]
+		, "plus4" : [ "g" ]
+		, "plus5" : [ "h" ]
+		, "plus6" : [ "j" ]
+		, "plus7" : [ "k" ]
+		, "minus1" : [ "x" ]
+		, "minus2" : [ "c" ]
+		, "minus3" : [ "v" ]
+		, "minus4" : [ "b" ]
+		, "minus5" : [ "n" ]
+		, "minus6" : [ "m" ]
+		, "minus7" : [ "," ]
+	}
+}
